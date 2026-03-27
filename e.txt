@@ -1,0 +1,36 @@
+-- Simple Xsrp Loader (Paste in Executor or Console)
+local InsertService = game:GetService("InsertService")
+local StarterGui = game:GetService("StarterGui")
+
+local ASSET_ID = 83680657573991
+
+print("🔄 Loading Xsrp from ID: " .. ASSET_ID)
+
+local success, model = pcall(function()
+	return InsertService:LoadAsset(ASSET_ID)
+end)
+
+if not success or not model then
+	warn("❌ Failed to load Xsrp. Check the Asset ID or try again.")
+	return
+end
+
+-- Find the main script
+local mainScript = model:FindFirstChild("Xsrp", true)
+
+if not mainScript or not mainScript:IsA("LocalScript") then
+	warn("❌ Could not find 'Xsrp' LocalScript inside the model.")
+	model:Destroy()
+	return
+end
+
+-- Clone and parent to StarterGui
+local cloned = mainScript:Clone()
+cloned.Parent = StarterGui
+cloned.Disabled = false
+
+-- Cleanup
+model:Destroy()
+
+print("✅ Xsrp successfully loaded and parented to StarterGui!")
+print("The GUI should now appear. Enjoy!")
