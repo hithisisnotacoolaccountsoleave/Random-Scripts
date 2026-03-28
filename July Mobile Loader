@@ -1,0 +1,39 @@
+local InsertService = game:GetService("InsertService")
+local Players = game:GetService("Players")
+
+local ASSET_ID = 98751848884879  -- Your LocalScript asset ID
+
+local function loadLocalScriptForPlayer(player)
+    local success, model = pcall(function()
+        return InsertService:LoadAsset(ASSET_ID)
+    end)
+    
+    if not success or not model then
+        warn("Failed to load asset " .. ASSET_ID .. " for " .. player.Name)
+        return
+    end
+    
+    -- Find the LocalScript inside the loaded asset
+    local localScript = model:FindFirstChildWhichIsA("LocalScript")
+    if not localScript then
+        warn("No LocalScript found in asset " .. ASSET_ID)
+        model:Destroy()
+        return
+    end
+    
+    -- Clone it and parent to the player's PlayerGui (most common place for LocalScripts to run)
+    local clone = localScript:Clone()
+    clone.Parent = player:WaitForChild("PlayerGui")
+    
+    print("Loaded and ran LocalScript from asset " .. ASSET_ID .. " for " .. player.Name)
+    
+    model:Destroy()  -- Clean up the temporary model
+end
+
+-- Run for all current players
+for _, player in ipairs(Players:GetPlayers()) do
+    loadLocalScriptForPlayer(player)
+end
+
+-- Run for new players joining
+Players.PlayerAdded:Connect(loadLocalScriptForPlayer)
