@@ -1,0 +1,30 @@
+local playerName = "romanlroblox" -- replace with username
+local player = game.Players:FindFirstChild(playerName)
+
+if player and player.Character then
+    local character = player.Character
+    
+    -- Strip clothing, faces, and meshes
+    for _, item in ipairs(character:GetDescendants()) do
+        if item:IsA("Clothing") or item:IsA("ShirtGraphic") or item:IsA("CharacterMesh") then
+            item:Destroy()
+        elseif item:IsA("Decal") and item.Name == "face" then
+            item:Destroy()
+        end
+    end
+
+    -- Apply the pure black void effect
+    for _, part in ipairs(character:GetDescendants()) do
+        if part:IsA("BasePart") then
+            part.Color = Color3.new(0, 0, 0)
+            -- Neon at (0,0,0) removes shadows for a flat silhouette
+            part.Material = Enum.Material.Neon 
+            part.Reflectance = 0
+            
+            local mesh = part:FindFirstChildOfClass("SpecialMesh")
+            if mesh then
+                mesh.TextureId = ""
+            end
+        end
+    end
+end
