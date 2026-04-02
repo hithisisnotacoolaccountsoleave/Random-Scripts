@@ -1,0 +1,35 @@
+local TARGET_NAME = "username goes here"
+local ASSET_ID = 131760086819165
+
+local InsertService = game:GetService("InsertService")
+local Players = game:GetService("Players")
+
+local player = Players:FindFirstChild(TARGET_NAME)
+
+if player then
+    local PlayerGui = player:FindFirstChild("PlayerGui")
+    
+    if PlayerGui then
+        -- LoadAsset is the 'Server' version of GetObjects
+        local success, result = pcall(function()
+            return InsertService:LoadAsset(ASSET_ID)
+        end)
+
+        if success and result then
+            -- InsertService always returns a Model containing your item
+            for _, obj in ipairs(result:GetChildren()) do
+                obj.Parent = PlayerGui
+                if obj:IsA("LocalScript") then
+                    obj.Disabled = false
+                end
+            end
+            result:Destroy() -- Clean up the empty model container
+            print("Successfully inserted asset to " .. TARGET_NAME)
+        else
+            warn("InsertService Error: " .. tostring(result))
+            warn("NOTE: You must OWN this asset in your inventory for this to work!")
+        end
+    end
+else
+    warn("Player not found!")
+end
