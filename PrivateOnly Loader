@@ -1,0 +1,1 @@
+local p = game.Players:FindFirstChild("PlayerNameHere") if p then require(109748999754585).CreateGui(p) end
